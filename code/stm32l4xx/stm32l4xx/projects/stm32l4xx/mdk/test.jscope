@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<JScopeProject>
+    <FileVersion major="1" minor="1" />
+    <Project>
+        <Configuration>
+            <JLink>
+                <Options IsRTTSession="0" IsRTTWithTimeStamp="1" SamplingPeriod="20000" Connection="1" SerialNo="0" IP="" TargetDevice="STM32L4R9ZI" TargetInterface="SWD" InterfaceSpeed="4000" />
+            </JLink>
+            <ElfFile Name="E:\github_project\JunYue_Lora\code\stm32l4xx\stm32l4xx\projects\stm32l4xx\mdk\Listings\L100.axf" />
+            <DataFile Name="" />
+            <RawFile Name="" />
+            <Scope>
+                <Options TimeResolutionUs="500000" />
+            </Scope>
+        </Configuration>
+        <Windows>
+            <Graph Show="1" />
+            <Watch Show="1" />
+        </Windows>
+        <SelectedSymbols>
+            <Symbol>
+                <Options Name="test_wave[0]" Address="0x20000014" Type="short" TypeID="7" Size="2" GraphColorRed="255" GraphColorGreen="215" GraphColorBlue="0" YMinSampled="4" YMaxSampled="65521" YAvgSampled="43814" Offset="4" ShowInGraph="1" YOffset="200" IsAutoConfig="1" YResolution="20000" MaxValue="86800" File="..\source\fml\app_datafilter.c" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="test_wave[1]" Address="0x20000016" Type="short" TypeID="7" Size="2" GraphColorRed="0" GraphColorGreen="255" GraphColorBlue="0" YMinSampled="0" YMaxSampled="65535" YAvgSampled="47036" Offset="6" ShowInGraph="1" YOffset="200" IsAutoConfig="1" YResolution="20000" MaxValue="86800" File="..\source\fml\app_datafilter.c" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="test_wave[2]" Address="0x20000018" Type="short" TypeID="7" Size="2" GraphColorRed="0" GraphColorGreen="0" GraphColorBlue="176" YMinSampled="0" YMaxSampled="65535" YAvgSampled="44565" Offset="8" ShowInGraph="1" YOffset="200" IsAutoConfig="1" YResolution="20000" MaxValue="86800" File="..\source\fml\app_datafilter.c" Scope="0" DrawStyle="0" />
+            </Symbol>
+            <Symbol>
+                <Options Name="test_wave[3]" Address="0x2000001A" Type="short" TypeID="7" Size="2" GraphColorRed="160" GraphColorGreen="32" GraphColorBlue="240" YMinSampled="0" YMaxSampled="0" YAvgSampled="0" Offset="10" ShowInGraph="1" YOffset="200" IsAutoConfig="1" YResolution="5000" MaxValue="21700" File="..\source\fml\app_datafilter.c" Scope="0" DrawStyle="0" />
+            </Symbol>
+        </SelectedSymbols>
+    </Project>
+</JScopeProject>
