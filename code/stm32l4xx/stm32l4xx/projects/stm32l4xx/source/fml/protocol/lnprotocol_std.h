@@ -37,9 +37,19 @@
 #define LN_P_ESP32_SET_AP  				0xE5
 #define LN_P_ESP32_SET_TCPSERVER 		0xe7
 #define LN_P_ESP32_NETSET 				0XFF
-#define LN_P_ESP32_R_CHANNELKIND 		0X03
-
-
+#define LN_P_R_CHANNELKIND 				0X03
+#define LN_P_R_SNCODE					0X02
+#define LN_P_R_VERSION					0X80
+#define LN_P_R_CHANNELCONDITION			0X57
+#define LN_P_R_SAMPLEPARAM				0X06
+#define LN_P_R_RUNMODE					0X56
+#define LN_P_R_TCPSERVER				0X54
+#define LN_P_R_APINF					0X53
+#define LN_P_R_IPINF					0X04
+#define LN_P_R_LOWPOWER					0X19
+#define LN_P_R_SCALE					0X08
+#define LN_P_R_ALARMVALUE				0X73
+#define LN_P_R_LOWPOWER_VALUE			0X76
 
 /**
  * @}

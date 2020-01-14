@@ -25,6 +25,8 @@
 #include "lnprotocol_std.h"
 #include "app_conf_net.h"
 #include "net_task.h"
+
+#include "app_datasend.h"
 /**
  * @addtogroup    bsp_esp32_Modules 
  * @{  
@@ -52,7 +54,7 @@
 #define      macUser_Esp32_ApSsid                         "yec-test"   // "Tenda_4F7AC0"//"yec-test"                //要连接的热点的名称
 #define      macUser_Esp32_ApPwd                          ""           //要连接的热点的密钥
 
-#define      macUser_Esp32_TcpServer_IP                   "192.168.100.234"//"192.168.0.112"// //     //要连接的服务器的 IP
+#define      macUser_Esp32_TcpServer_IP                   "192.168.100.233"//"192.168.0.112"// //     //要连接的服务器的 IP
 #define      macUser_Esp32_TcpServer_Port                 "8712"  			//"8712"//             //要连接的服务器的端口
 
 /**
@@ -74,7 +76,20 @@
  * @brief         
  * @{  
  */
+typedef struct
+{
+	uint8_t buf[1024];
+	uint16_t len;
+}BSP_ESP32_Txbuf_t;
 
+typedef struct
+{
+	BSP_ESP32_Txbuf_t txbuf[64];
+	uint8_t in;
+	uint8_t out;
+	uint8_t count;
+	uint8_t size;
+}BSP_ESP32_TxQueue_t;
 /**
  * @}
  */
@@ -86,7 +101,13 @@
  */
 #define BSP_ESP32_WORKSPACE_LEN  1600
 uint8_t BSP_ESP32_workspace[BSP_ESP32_WORKSPACE_LEN] = { 0 };
-
+BSP_ESP32_TxQueue_t BSP_ESP32_TxQueue = 
+{
+	.in = 0,
+	.out = 0,
+	.count = 0,
+	.size = 64,
+};
 
 
 static ESP32_Inf_t ESP32_Inf = 
@@ -508,6 +529,8 @@ void ESP32_Loop(void)  // esp32 core func
 				
 				DEBUG("ENTER ESP32_UP_STATUS_TO_CONNECTED \r\n");
 				esp32_setmodule_status(ESP32_MODULE_STATUS , ESP32_CONNECTED);
+				APP_DataSend_NetConnected();
+
 			}
 			break; 
 			case ESP32_BUSY:

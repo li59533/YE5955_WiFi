@@ -181,7 +181,14 @@ void SystemParam_Init(void)
 {
 	DEBUG("SystemParam_Init\r\n");
     SystemParam_Read();
-	//g_SystemParam_Param.
+	g_SystemParam_Param.sample_adch = 8;
+	g_SystemParam_Param.ad7682_adchs = 0x04;
+	g_SystemParam_Param.acceleration_adchs = 0x03;
+	g_SystemParam_Param.temp_adchs = 1;
+	g_SystemParam_Param.samplepoints = 128;
+	g_SystemParam_Param.boardpoints = g_SystemParam_Param.samplepoints * g_SystemParam_Param.ad7682_adchs * sizeof(int16_t);
+	g_SystemParam_Param.periodboardpoints = g_SystemParam_Param.samplepoints * sizeof(int16_t) * 2;
+	
 }
 
 int16_t SystemParam_Read(void)
