@@ -177,6 +177,13 @@ void Net_Task(void * pvParameter)
 			ESP32_Loop();
 		}
 		
+		if((event_flag & NET_TASK_SEND_EVENT) != 0x00)
+		{	
+			DEBUG("NET_TASK_SEND_EVENT\r\n");
+			BSP_ESP32_Tx_Task();
+		}		
+		
+		
 	}
 	
 }

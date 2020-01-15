@@ -99,7 +99,7 @@ TIM_HandleTypeDef  htim5 =
 	.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE,
 	.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1,
 	.Init.CounterMode = TIM_COUNTERMODE_UP,
-	.Init.Period = 5, //1000us一次
+	.Init.Period = 2, //1000us一次
 	.Init.Prescaler = 120000,
 	.Init.RepetitionCounter = 0,	
 };

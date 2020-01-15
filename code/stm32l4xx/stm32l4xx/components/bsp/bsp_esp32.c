@@ -464,15 +464,18 @@ uint8_t ESP32_GetModule_Status(uint8_t status_kind)   // get esp32 module status
 }
 uint8_t * ESP32_GetWorkSpace(void)
 {
-	if(ESP32_GetModule_Status(ESP32_SEND_STATUS) == ESP32_Send_BUSY)
-	{
-		return NULL;
-	}
-	else if(ESP32_GetModule_Status(ESP32_SEND_STATUS) == ESP32_Send_IDLE)
-	{
-		return BSP_ESP32_workspace;
-	}
-	return NULL;
+//	if(ESP32_GetModule_Status(ESP32_SEND_STATUS) == ESP32_Send_BUSY)
+//	{
+//		return NULL;
+//	}
+//	else if(ESP32_GetModule_Status(ESP32_SEND_STATUS) == ESP32_Send_IDLE)
+//	{
+//		return BSP_ESP32_workspace;
+//	}
+//	return NULL;
+
+
+	return BSP_ESP32_workspace;
 }
 
 static void esp32_setmodule_status(uint8_t status_kind , uint8_t status) // set esp32 module statusss
@@ -555,6 +558,80 @@ void ESP32_Loop(void)  // esp32 core func
 		
 	}
 }
+
+
+
+void BSP_ESP32_TX_Enqueue(uint8_t * buf, uint16_t len)
+{
+	memcpy(BSP_ESP32_TxQueue.txbuf[BSP_ESP32_TxQueue.in].buf , buf , len);
+	BSP_ESP32_TxQueue.txbuf[BSP_ESP32_TxQueue.in].len = len;
+	BSP_ESP32_TxQueue.in ++ ; 
+	BSP_ESP32_TxQueue.count ++;
+	
+	BSP_ESP32_TxQueue.in %= BSP_ESP32_TxQueue.size;
+	DEBUG("BSP_ESP32_TxQueue.count is %d\r\n",BSP_ESP32_TxQueue.count);
+	Net_Task_Event_Start(NET_TASK_SEND_EVENT, EVENT_FROM_TASK);
+}
+
+
+uint8_t * BSP_ESP32_TX_Dequeue(uint16_t * len)
+{
+	uint8_t * buf_ptr = 0;
+	
+	buf_ptr = BSP_ESP32_TxQueue.txbuf[BSP_ESP32_TxQueue.out].buf ; 
+	* len = BSP_ESP32_TxQueue.txbuf[BSP_ESP32_TxQueue.out].len;
+	BSP_ESP32_TxQueue.out ++;
+	BSP_ESP32_TxQueue.count -- ;
+	
+	BSP_ESP32_TxQueue.out %= BSP_ESP32_TxQueue.size;
+	
+	
+	return buf_ptr;
+}
+
+void BSP_ESP32_Tx_Task(void)
+{
+	if(ESP32_Inf.DataSend_status == ESP32_Send_IDLE)
+	{
+		if(BSP_ESP32_TxQueue.count > 0)
+		{
+			
+			uint8_t * buf_ptr = 0;
+			uint16_t len = 0;
+			
+			ESP32_Inf.DataSend_status = ESP32_Send_BUSY;
+			buf_ptr = BSP_ESP32_TX_Dequeue(& len);
+			
+			BSP_ESP32_WriteBytes(buf_ptr , len);
+		}
+		else
+		{
+
+		}
+	}
+	else
+	{
+		
+	}
+}
+
+void BSP_ESP32_TxCheck(void)
+{
+	if(BSP_ESP32_TxQueue.count > 0 )
+	{
+		uint8_t * buf_ptr = 0;
+		uint16_t len = 0;
+
+		buf_ptr = BSP_ESP32_TX_Dequeue(& len);
+
+		BSP_ESP32_WriteBytes(buf_ptr , len);
+	}
+	else
+	{
+		ESP32_Inf.DataSend_status = ESP32_Send_IDLE;
+	}
+}
+
 
 /**
  * @}

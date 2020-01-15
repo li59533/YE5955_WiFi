@@ -19,6 +19,7 @@
  */
 #include "clog.h"
 #include "bsp_queue.h"
+#include "bsp_esp32.h"
 /**
  * @addtogroup    stm32l4xx_bsp_usart_Modules 
  * @{  
@@ -458,16 +459,16 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
 // ------------------USART1_IRQHandler------------------
 void BSP_Usart1_IRQHandler(void)
 {
-	if(__HAL_UART_GET_IT(&husart1, UART_IT_IDLE) == SET)
-	{
-		DEBUG("Uart1  Idle rev len :%d\r\n",__HAL_DMA_GET_COUNTER(husart1.hdmarx) );
-	
-//		BSP_Queue_Enqueue( BSP_QUEUE_UART1_REV , bsp_usart1_rx , usart1_i);
-//		memset(bsp_usart1_rx , 0 , sizeof(bsp_usart1_rx));
-//		usart1_i = 0;
-		__HAL_UART_CLEAR_IDLEFLAG(&husart1);
-		DEBUG("ENTER Uart1 IDLE \r\n");
-	}
+//	if(__HAL_UART_GET_IT(&husart1, UART_IT_IDLE) == SET)
+//	{
+//		DEBUG("Uart1  Idle rev len :%d\r\n",__HAL_DMA_GET_COUNTER(husart1.hdmarx) );
+//	
+////		BSP_Queue_Enqueue( BSP_QUEUE_UART1_REV , bsp_usart1_rx , usart1_i);
+////		memset(bsp_usart1_rx , 0 , sizeof(bsp_usart1_rx));
+////		usart1_i = 0;
+//		__HAL_UART_CLEAR_IDLEFLAG(&husart1);
+//		DEBUG("ENTER Uart1 IDLE \r\n");
+//	}
 	HAL_UART_IRQHandler( &husart1);
 	__HAL_UART_CLEAR_OREFLAG(&husart1);
 	
@@ -547,7 +548,19 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 }
 
 
+void HAL_UART_TxCpltCallback(UART_HandleTypeDef *huart)
+{
+	if(huart->Instance == USART1)
+	{
+		//DEBUG("Uart1 Send Complete\r\n");
+		BSP_ESP32_TxCheck();
+	}
 
+	if(huart->Instance == USART2)
+	{
+
+	}
+}
 
 
 /**

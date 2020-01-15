@@ -467,14 +467,14 @@
               <FilePath>..\source\application\second_task\second_task.c</FilePath>
             </File>
             <File>
-              <FileName>datasend_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\source\application\datasend_task\datasend_task.c</FilePath>
-            </File>
-            <File>
               <FileName>net_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\source\application\net_task\net_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>datasend_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\source\application\datasend_task\datasend_task.c</FilePath>
             </File>
             <File>
               <FileName>dataprocess_task.c</FileName>

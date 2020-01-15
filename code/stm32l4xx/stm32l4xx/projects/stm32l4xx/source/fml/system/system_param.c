@@ -81,7 +81,7 @@ const SystemParam_Config_t SystemParam_Config_Default =
 	.DisplayMode = 0, //uint8_t DisplayMode;  // ???? = 0 ?? =1 ??
 	.interface_type = {TYPE_IEPE,TYPE_IEPE,TYPE_IEPE,TYPE_IEPE,TYPE_NONE,TYPE_IEPE,TYPE_IEPE,TYPE_IEPE,TYPE_IEPE,1,1,1}, //uint8_t interface_type[12]; // 
 	.unit = {UNIT_M_S2,UNIT_TEMP,UNIT_M_S2,UNIT_M_S2,UNIT_M_S2,UNIT_M_S2,1,1,1,1,1,1},//uint8_t unit[12];  // 
-	.floatrange = {3000,3000,3000,3000,1000,1000,1000,1000,10000,10000,10000,10000},//uint32_t scale[12]; // 
+	.floatrange = {300,100,100,3000,1000,1000,1000,1000,10000,10000,10000,10000},//uint32_t scale[12]; // 
 	.floatadjust = {0.0f,0.0f,0.0f,0.0f,1250.f,0,0,0,8192,8192,8192,8192},//uint32_t adjust[12]; // 
 	//	{0,1,2,~0,~0,~0,~0,~0,3,4,5,6},//uint16_t interface_addr[12]; // modbus  
 	.alarmgate = {100,100,100,100,100,100},//	float alarmgate[12]; // float 

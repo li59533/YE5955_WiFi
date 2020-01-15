@@ -133,6 +133,15 @@ void ESP32_Loop(void);  // esp32 core func
 void ESP32_AddCMD(ESP32_Core_Cmd_e cmd);
 
 uint8_t * ESP32_GetWorkSpace(void); // get sendbuf space
+
+void BSP_ESP32_TX_Enqueue(uint8_t * buf, uint16_t len);
+
+
+uint8_t * BSP_ESP32_TX_Dequeue(uint16_t * len);
+
+void BSP_ESP32_Tx_Task(void);
+void BSP_ESP32_TxCheck(void);
+
 /**
  * @}
  */

@@ -23,6 +23,7 @@
 #include "app_power.h"
 #include "datasend_task.h"
 #include "app_datasend.h"
+
 /**
  * @addtogroup    datasend_task_Modules 
  * @{  
@@ -137,7 +138,9 @@ void DataSend_Task(void * pvParameter)
 		{
 			DEBUG("DATASEND_TASK_SEND_EVENT\r\n");
 			APP_DataSend_SendCharacteristic();
-			DataSend_Task_StartTim(10000);
+			BoardAutoPeroidWave();
+			
+			DataSend_Task_StartTim(1000);
 		}
 		if((event_flag & DATASEND_TASK_SEND_DEVICE_INF_EVENT) != 0x00)
 		{

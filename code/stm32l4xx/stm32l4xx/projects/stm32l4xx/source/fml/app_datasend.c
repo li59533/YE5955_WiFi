@@ -25,6 +25,7 @@
 #include "lnprotocol_std.h"
 #include "version.h"
 #include "rtos_tools.h"
+#include "app_datafilter.h"
 /**
  * @addtogroup    app_datasend_Modules 
  * @{  
@@ -125,29 +126,29 @@ void app_datasend_test(void)
 void APP_DataSend_NetConnected(void)
 {
 	APP_Report_ChannelKind(Current_Is_NET) ;  // 
-	RTOS_Delay_ms(10);
+	//RTOS_Delay_ms(10);
 	APP_Report_ID(Current_Is_NET) ;  // 
-	RTOS_Delay_ms(10);
+	//RTOS_Delay_ms(10);
 	APP_Report_Version(Current_Is_NET) ;  // 
-	RTOS_Delay_ms(10);
+	//RTOS_Delay_ms(10);
 	APP_Report_ChannelCondition(Current_Is_NET); 
-	RTOS_Delay_ms(10);
+	//RTOS_Delay_ms(10);
 	APP_Report_SampleParam(Current_Is_NET) ;
-	RTOS_Delay_ms(10);
+	//RTOS_Delay_ms(10);
 	APP_Report_APinf(Current_Is_NET)  ;
-	RTOS_Delay_ms(10);
+	//RTOS_Delay_ms(10);
 	APP_Report_TCPServer(Current_Is_NET) ;  
-	RTOS_Delay_ms(10);
+	//RTOS_Delay_ms(10);
 	APP_Report_RunMode(Current_Is_NET)   ;
-	RTOS_Delay_ms(10);
+	//RTOS_Delay_ms(10);
 	APP_Report_IPinf(Current_Is_NET)  ;
-	RTOS_Delay_ms(10);
+	//RTOS_Delay_ms(10);
 	APP_Report_LowPower(Current_Is_NET)  ;
-	RTOS_Delay_ms(10);
+	//RTOS_Delay_ms(10);
 	APP_Report_Scale(Current_Is_NET)  ;
-	RTOS_Delay_ms(10);
+	//RTOS_Delay_ms(10);
 	APP_Report_AlarmValue(Current_Is_NET);
-	RTOS_Delay_ms(10);
+	//RTOS_Delay_ms(10);
 	APP_Report_LowPowerValue(Current_Is_NET); 
 }
 
@@ -310,7 +311,9 @@ int8_t APP_Report_ChannelKind(uint8_t channel_type)   //
 			sendbuf_ptr[11] = LNPROTOCOL_STD_FOOT;
 			sendbuf_len = 12;
 
-			BSP_ESP32_WriteBytes(sendbuf_ptr,  sendbuf_len);
+			BSP_ESP32_TX_Enqueue(sendbuf_ptr,  sendbuf_len);
+			
+			
 		}
 		else
 		{
@@ -360,7 +363,7 @@ int8_t APP_Report_ID(uint8_t channel_type)   //
 			sendbuf_ptr[13] = LNPROTOCOL_STD_FOOT;
 			sendbuf_len = 14;
 
-			BSP_ESP32_WriteBytes(sendbuf_ptr,  sendbuf_len);
+			BSP_ESP32_TX_Enqueue(sendbuf_ptr,  sendbuf_len);
 						
 		}
 		else
@@ -408,7 +411,7 @@ int8_t APP_Report_Version(uint8_t channel_type)   //
 			sendbuf_ptr[21] = LNPROTOCOL_STD_FOOT;
 			sendbuf_len = 22;
 
-			BSP_ESP32_WriteBytes(sendbuf_ptr,  sendbuf_len);
+			BSP_ESP32_TX_Enqueue(sendbuf_ptr,  sendbuf_len);
 						
 		}
 		else
@@ -454,7 +457,7 @@ int8_t APP_Report_ChannelCondition(uint8_t channel_type)   //
 			sendbuf_ptr[7] = LNPROTOCOL_STD_FOOT;
 			sendbuf_len = 8;
 
-			BSP_ESP32_WriteBytes(sendbuf_ptr,  sendbuf_len);
+			BSP_ESP32_TX_Enqueue(sendbuf_ptr,  sendbuf_len);
 						
 		}
 		else
@@ -510,7 +513,7 @@ int8_t APP_Report_SampleParam(uint8_t channel_type)   //
 			sendbuf_ptr[16] = LNPROTOCOL_STD_FOOT;
 			sendbuf_len = 17;
 
-			BSP_ESP32_WriteBytes(sendbuf_ptr,  sendbuf_len);
+			BSP_ESP32_TX_Enqueue(sendbuf_ptr,  sendbuf_len);
 						
 		}
 		else
@@ -573,7 +576,7 @@ int8_t APP_Report_APinf(uint8_t channel_type)   //
 			sendbuf_ptr[9 + APSSIDlength + APPASSWORDlength] = LNPROTOCOL_STD_FOOT;
 			sendbuf_len = 10 + APSSIDlength + APPASSWORDlength;			
 
-			BSP_ESP32_WriteBytes(sendbuf_ptr,  sendbuf_len);
+			BSP_ESP32_TX_Enqueue(sendbuf_ptr,  sendbuf_len);
 						
 		}
 		else
@@ -632,7 +635,7 @@ int8_t APP_Report_TCPServer(uint8_t channel_type)   //
 			sendbuf_ptr[9 + TcpServer_IPlength + TcpServer_Portlength] = LNPROTOCOL_STD_FOOT;
 			sendbuf_len = 10 + TcpServer_IPlength + TcpServer_Portlength;			
 			
-			BSP_ESP32_WriteBytes(sendbuf_ptr,  sendbuf_len);
+			BSP_ESP32_TX_Enqueue(sendbuf_ptr,  sendbuf_len);
 						
 		}
 		else
@@ -678,7 +681,7 @@ int8_t APP_Report_RunMode(uint8_t channel_type)   //
 			sendbuf_ptr[6] = LNPROTOCOL_STD_FOOT;
 			sendbuf_len = 7;
 			
-			BSP_ESP32_WriteBytes(sendbuf_ptr,  sendbuf_len);
+			BSP_ESP32_TX_Enqueue(sendbuf_ptr,  sendbuf_len);
 						
 		}
 		else
@@ -751,7 +754,7 @@ int8_t APP_Report_IPinf(uint8_t channel_type)   //
 			sendbuf_ptr[14 + localIPlength + LocalMASKlength + LocalGATEWAYlength] = LNPROTOCOL_STD_FOOT;
 			sendbuf_len = 15 + localIPlength + LocalMASKlength + LocalGATEWAYlength;			
 			
-			BSP_ESP32_WriteBytes(sendbuf_ptr,  sendbuf_len);
+			BSP_ESP32_TX_Enqueue(sendbuf_ptr,  sendbuf_len);
 						
 		}
 		else
@@ -801,7 +804,7 @@ int8_t APP_Report_LowPower(uint8_t channel_type)   //
 			sendbuf_ptr[13] = LNPROTOCOL_STD_FOOT;
 			sendbuf_len = 14;
 			
-			BSP_ESP32_WriteBytes(sendbuf_ptr,  sendbuf_len);
+			BSP_ESP32_TX_Enqueue(sendbuf_ptr,  sendbuf_len);
 						
 		}
 		else
@@ -875,7 +878,7 @@ int8_t APP_Report_Scale(uint8_t channel_type)   //
 			sendbuf_ptr[channelnum * 17 + 5] = LNPROTOCOL_STD_FOOT;
 			sendbuf_len = channelnum * 17 + 6;			
 			
-			BSP_ESP32_WriteBytes(sendbuf_ptr,  sendbuf_len);
+			BSP_ESP32_TX_Enqueue(sendbuf_ptr,  sendbuf_len);
 						
 		}
 		else
@@ -927,7 +930,7 @@ int8_t APP_Report_AlarmValue(uint8_t channel_type)   //
 			sendbuf_ptr[channelnum * 4 + 5] = LNPROTOCOL_STD_FOOT;
 			sendbuf_len = channelnum * 4 + 6;
 			
-			BSP_ESP32_WriteBytes(sendbuf_ptr,  sendbuf_len);
+			BSP_ESP32_TX_Enqueue(sendbuf_ptr,  sendbuf_len);
 						
 		}
 		else
@@ -981,7 +984,7 @@ int8_t APP_Report_LowPowerValue(uint8_t channel_type)   //
 			sendbuf_ptr[13] = LNPROTOCOL_STD_FOOT;
 			sendbuf_len=14;
 			
-			BSP_ESP32_WriteBytes(sendbuf_ptr,  sendbuf_len);
+			BSP_ESP32_TX_Enqueue(sendbuf_ptr,  sendbuf_len);
 						
 		}
 		else
@@ -999,7 +1002,96 @@ int8_t APP_Report_LowPowerValue(uint8_t channel_type)   //
 }
 
 
+void BoardAutoPeroidWave(void)
+{ 
+	if(ESP32_GetModule_Status(ESP32_MODULE_STATUS) != ESP32_CONNECTED)
+	{
+		return;
+		
+	}
+	uint8_t checksum = 0;
+	uint32_t wpp = 0;
+	int16_t sendperioddata = 0;
+	uint32_t beforeSAMPLEblock = (currentSAMPLEblock + 1) % 2;;
+	float yy;
+	int16_t *p;
+	uint16_t packege_flag = 0;
+	uint16_t buflength = g_SystemParam_Param.periodboardpoints + 1 + 7 + 2;//1个字节通道号 7个字节时间，2个字节包号
+	uint8_t PeriodWaveToSend[600] = { 0 };
+	float inter_factor = 0;
+	RTC_T rtc_data ;
+	
+	rtc_data = BSP_RTC_Get();
+	
+	for(uint32_t ii = 0;ii < g_SystemParam_Param.acceleration_adchs ; ii ++)
+	{
+		if(((g_SystemParam_Config.DataToSendChannel >> ii) & 0x01) == 0)  //未使能的通道不发送
+		{
+			continue;
+		}
 
+		switch(ii)
+		{
+			case 0:
+			p=&piz_emu_data[beforeSAMPLEblock][0];
+			break;
+			case 1:
+			p=&mems_emu_data[beforeSAMPLEblock][0][0];
+			break;
+			case 2:
+			p=&mems_emu_data[beforeSAMPLEblock][1][0];
+			break;
+			case 3:
+			p=&mems_emu_data[beforeSAMPLEblock][2][0];
+			break;
+			default:
+			break;
+		}
+		inter_factor=g_SystemParam_Config.floatadc[ii]*g_SystemParam_Config.floatscale[ii]*1500.0f/g_SystemParam_Config.floatrange[ii];
+		
+		for(uint32_t i=0;i<g_SystemParam_Config.channel_freq[ii];i++) //*config.ADtime
+		{
+			yy = *p;
+			p ++;
+			sendperioddata = yy * inter_factor;//(int16_t)(yy*Parameter.ReciprocalofRange[ii]);
+
+			PeriodWaveToSend[wpp + 14] = sendperioddata;
+			PeriodWaveToSend[wpp + 15] = sendperioddata >>8;
+			checksum += (PeriodWaveToSend[wpp + 14] + PeriodWaveToSend[wpp + 15]);			 
+			wpp = wpp + 2;			
+			
+			if(wpp > (g_SystemParam_Param.periodboardpoints - 1)) 
+			{	
+				PeriodWaveToSend[0] = 0x7e;//TELid;
+				PeriodWaveToSend[1] = 0x70;//TELid>>8;	
+				PeriodWaveToSend[2] = buflength;//TELid>>16;
+				PeriodWaveToSend[3] = (uint8_t)(buflength>>8);// TELid>>24; //2,3????????482??
+				PeriodWaveToSend[4] = ii+1;// TELid>>24;
+				PeriodWaveToSend[5] = rtc_data.Year;
+				PeriodWaveToSend[6] = rtc_data.Year>>8;
+				PeriodWaveToSend[7] = rtc_data.Mon;
+				PeriodWaveToSend[8] = rtc_data.Day; //时间用32位表示
+				PeriodWaveToSend[9] = rtc_data.Hour;
+				PeriodWaveToSend[10] = rtc_data.Min;
+				PeriodWaveToSend[11] = rtc_data.Sec; //时间用32位表示		
+				PeriodWaveToSend[12] = packege_flag; //时间用32位表示
+				PeriodWaveToSend[13] = packege_flag >> 8; //时间用32位表示
+				for(uint32_t ii=1;ii<14;ii++)
+					checksum+=PeriodWaveToSend[ii];  //adch是从1开始的
+				
+				PeriodWaveToSend[14+g_SystemParam_Param.periodboardpoints]=checksum;  //2,3????????482??
+				PeriodWaveToSend[15+g_SystemParam_Param.periodboardpoints]=0x7e; 
+				packege_flag++;
+				BSP_ESP32_TX_Enqueue(PeriodWaveToSend,g_SystemParam_Param.periodboardpoints+16);	
+				wpp=0;
+				checksum=0;
+				RTOS_Delay_ms(2);
+			}	 
+		}
+	}
+
+
+}
 
 
 

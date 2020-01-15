@@ -90,6 +90,7 @@
  * @{  
  */
 static void app_confnet_esp32_status(uint8_t * value_buf , uint16_t value_len);
+static void app_confnet_receive_beacon(uint8_t * buf , uint16_t len);
 /**
  * @}
  */
@@ -108,14 +109,21 @@ void APP_ConfNet_Process(uint8_t * buf , uint16_t len)   // deal with the cmd
 	conf_type = &buf[1];
 	value_len = buf[2] + buf[3] * 256;
 	
+	DEBUG("NET Conf Type is 0x%02X\r\n" , *conf_type);
+	
 	switch(*conf_type)
 	{
 		case LN_P_ESP32_STATUS: app_confnet_esp32_status(conf_type + 3, value_len);break;
+		case LN_P_RECEIVE_BEACON: app_confnet_receive_beacon(buf , len);break;
 	}
 }
 
 
-
+static void app_confnet_receive_beacon(uint8_t * buf , uint16_t len)
+{
+	DEBUG("app_confnet_receive_beacon\r\n");
+	BSP_ESP32_TX_Enqueue(buf,  len);	
+}
 	
 
 

@@ -51,6 +51,9 @@
 #define LN_P_R_ALARMVALUE				0X73
 #define LN_P_R_LOWPOWER_VALUE			0X76
 
+#define LN_P_RECEIVE_BEACON				0X11
+
+
 /**
  * @}
  */
