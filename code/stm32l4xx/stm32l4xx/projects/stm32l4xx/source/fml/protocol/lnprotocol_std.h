@@ -52,7 +52,7 @@
 #define LN_P_R_LOWPOWER_VALUE			0X76
 
 #define LN_P_RECEIVE_BEACON				0X11
-
+#define LN_P_R_CHARACTER_VALUE			0x74
 
 /**
  * @}

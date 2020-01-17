@@ -112,7 +112,7 @@ uint32_t Dataprocess_Task_Init(void)
 	BaseType_t basetype = { 0 };
 	basetype = xTaskCreate(Dataprocess_Task,\
 							"Dataprocess_Task",\
-							1024,
+							256,
 							NULL,
 							5,
 							&Dataprocess_Task_Handle);
@@ -136,21 +136,11 @@ void Dataprocess_Task(void * pvParameter)
 	{
 		xTaskNotifyWait(0x00,ULONG_MAX,&event_flag , portMAX_DELAY);
 
-		if((event_flag & DATAPEOCESS_TASK_CALC_EVENT) != 0x00)
-		{
-			dataprocess_ramainheap = uxTaskGetStackHighWaterMark(NULL);
-			DEBUG("Dataprocess_Task ramain heap:%d %%\r\n",dataprocess_ramainheap);
-			DEBUG("DATAPEOCESS_TASK_CALC_EVENT\r\n");
-			//
-			//vTaskDelay(pdMS_TO_TICKS(10000));			
-		}
-		
 		if((event_flag & DATAPEOCESS_TASK_FILTER_EVENT) != 0x00)
 		{
-			Bsp_LedToggle(BSP_LED_TEST);
-			//DEBUG("DATAPEOCESS_TASK_FILTER_EVENT\r\n");
-			APP_DataFilter_Process();
-			//vTaskDelay(pdMS_TO_TICKS(10000));			
+			APP_DataFilter_Process();	
+//			dataprocess_ramainheap = uxTaskGetStackHighWaterMark(NULL);
+//			DEBUG("Dataprocess_Task ramain heap:%d \r\n",dataprocess_ramainheap);			
 		}
 	}
 	

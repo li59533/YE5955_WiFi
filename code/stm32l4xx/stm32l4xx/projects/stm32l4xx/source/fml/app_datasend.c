@@ -12,6 +12,7 @@
  */
 #include "app_datasend.h"
 #include "stm32_bsp_conf.h"
+#include "FreeRTOS.h"
 /**
  * @addtogroup    XXX 
  * @{  
@@ -106,7 +107,7 @@
  * @brief         
  * @{  
  */
- 
+uint8_t space_test[16384 * 2] = { 0 };
  
 void app_datasend_test(void)
 {
@@ -116,6 +117,8 @@ void app_datasend_test(void)
 	uint8_t ptr = 0;
 	memcpy( float_temp, (uint8_t *)&temp , 4 );
 	
+	
+	space_test[16384 * 2 -1] = 0;
 	for(uint8_t i = 0; i < 4 ; i ++)
 	{
 		ptr += snprintf(buf + ptr , 30 - ptr , "%02X",float_temp[i]);
@@ -125,6 +128,10 @@ void app_datasend_test(void)
 	
 void APP_DataSend_NetConnected(void)
 {
+	
+	app_datasend_test();
+	
+	
 	APP_Report_ChannelKind(Current_Is_NET) ;  // 
 	//RTOS_Delay_ms(10);
 	APP_Report_ID(Current_Is_NET) ;  // 
@@ -1007,20 +1014,23 @@ void BoardAutoPeroidWave(void)
 	if(ESP32_GetModule_Status(ESP32_MODULE_STATUS) != ESP32_CONNECTED)
 	{
 		return;
-		
 	}
+
+	
 	uint8_t checksum = 0;
-	uint32_t wpp = 0;
+	uint16_t wpp = 0;
 	int16_t sendperioddata = 0;
 	uint32_t beforeSAMPLEblock = (currentSAMPLEblock + 1) % 2;;
-	float yy;
+	int16_t yy;
 	int16_t *p;
 	uint16_t packege_flag = 0;
 	uint16_t buflength = g_SystemParam_Param.periodboardpoints + 1 + 7 + 2;//1个字节通道号 7个字节时间，2个字节包号
-	uint8_t PeriodWaveToSend[600] = { 0 };
+	uint8_t * PeriodWaveToSend;
 	float inter_factor = 0;
+	
 	RTC_T rtc_data ;
 	
+	PeriodWaveToSend = pvPortMalloc(600); //vPortFree()
 	rtc_data = BSP_RTC_Get();
 	
 	for(uint32_t ii = 0;ii < g_SystemParam_Param.acceleration_adchs ; ii ++)
@@ -1033,31 +1043,29 @@ void BoardAutoPeroidWave(void)
 		switch(ii)
 		{
 			case 0:
-			p=&piz_emu_data[beforeSAMPLEblock][0];
-			break;
+				p=&piz_emu_data[beforeSAMPLEblock][0];
+				break;
 			case 1:
-			p=&mems_emu_data[beforeSAMPLEblock][0][0];
-			break;
+				p=&mems_emu_data[beforeSAMPLEblock][0][0];
+				break;
 			case 2:
-			p=&mems_emu_data[beforeSAMPLEblock][1][0];
-			break;
-			case 3:
-			p=&mems_emu_data[beforeSAMPLEblock][2][0];
-			break;
+				p=&mems_emu_data[beforeSAMPLEblock][1][0];
+				break;
 			default:
 			break;
 		}
-		inter_factor=g_SystemParam_Config.floatadc[ii]*g_SystemParam_Config.floatscale[ii]*1500.0f/g_SystemParam_Config.floatrange[ii];
 		
-		for(uint32_t i=0;i<g_SystemParam_Config.channel_freq[ii];i++) //*config.ADtime
+		inter_factor = g_SystemParam_Config.floatadc[ii] * g_SystemParam_Config.floatscale[ii] * 1500.0f / g_SystemParam_Config.floatrange[ii];
+		
+		for(uint32_t i = 0 ; i < g_SystemParam_Config.channel_freq[ii] ; i ++) //*config.ADtime
 		{
 			yy = *p;
 			p ++;
-			sendperioddata = yy * inter_factor;//(int16_t)(yy*Parameter.ReciprocalofRange[ii]);
+			sendperioddata = (int16_t)(yy * inter_factor);//(int16_t)(yy*Parameter.ReciprocalofRange[ii]);
 
 			PeriodWaveToSend[wpp + 14] = sendperioddata;
 			PeriodWaveToSend[wpp + 15] = sendperioddata >>8;
-			checksum += (PeriodWaveToSend[wpp + 14] + PeriodWaveToSend[wpp + 15]);			 
+//			checksum += (PeriodWaveToSend[wpp + 14] + PeriodWaveToSend[wpp + 15]);			 
 			wpp = wpp + 2;			
 			
 			if(wpp > (g_SystemParam_Param.periodboardpoints - 1)) 
@@ -1076,22 +1084,149 @@ void BoardAutoPeroidWave(void)
 				PeriodWaveToSend[11] = rtc_data.Sec; //时间用32位表示		
 				PeriodWaveToSend[12] = packege_flag; //时间用32位表示
 				PeriodWaveToSend[13] = packege_flag >> 8; //时间用32位表示
-				for(uint32_t ii=1;ii<14;ii++)
-					checksum+=PeriodWaveToSend[ii];  //adch是从1开始的
+
+				for(uint16_t j = 1; j < g_SystemParam_Param.periodboardpoints + 14 ; j ++)
+				{
+					checksum += PeriodWaveToSend[j];
+				}
 				
-				PeriodWaveToSend[14+g_SystemParam_Param.periodboardpoints]=checksum;  //2,3????????482??
-				PeriodWaveToSend[15+g_SystemParam_Param.periodboardpoints]=0x7e; 
-				packege_flag++;
+				PeriodWaveToSend[14+g_SystemParam_Param.periodboardpoints] = checksum;//checksum;  //2,3????????482??
+				PeriodWaveToSend[15+g_SystemParam_Param.periodboardpoints] = 0x7e; 
+				packege_flag ++;
+				
+				if(packege_flag > 127)
+				{
+					DEBUG("packege_flag > 127 \r\n");
+				}
+				
 				BSP_ESP32_TX_Enqueue(PeriodWaveToSend,g_SystemParam_Param.periodboardpoints+16);	
+
+				DEBUG("packege_No %d checksum : 0x%02X\r\n",packege_flag,checksum);
 				wpp=0;
 				checksum=0;
-				RTOS_Delay_ms(2);
-			}	 
+				
+			}
 		}
+		
+		RTOS_Delay_ms(30);
 	}
-
-
+	vPortFree(PeriodWaveToSend);
 }
+
+
+
+
+void APP_Report_CharacterValue(void )
+{
+	uint8_t * sendbuf = 0;
+	
+	
+	
+	sendbuf = pvPortMalloc(300); //vPortFree()
+	
+	
+	uint32_t empty_Acceleration_ADCHS=0;   //未发送通道
+	RTC_T rtc_data ;
+	rtc_data = BSP_RTC_Get();
+	
+	sendbuf[0]=LNPROTOCOL_STD_HEAD;
+	sendbuf[1]=LN_P_R_CHARACTER_VALUE;
+	uint32_t 	iii=0;
+	uint8_t * floatdata;
+	sendbuf[4]=rtc_data.Year;
+	sendbuf[5]=rtc_data.Year>>8;
+	sendbuf[6]=rtc_data.Mon;
+	sendbuf[7]=rtc_data.Day; //时间用32位表示
+	sendbuf[8]=rtc_data.Hour;
+	sendbuf[9]=rtc_data.Min;
+	sendbuf[10]=rtc_data.Sec; //时间用32位表示
+
+	//rule_check();	
+	
+	for(uint32_t ii = 0 ; ii < g_SystemParam_Param.acceleration_adchs ; ii ++)
+	{
+		floatdata=(uint8_t *)&g_SystemParam_Param.EffectiveValue[ii];//[0];
+		sendbuf[11+25*iii]=*floatdata;
+		sendbuf[12+25*iii]=*(floatdata+1);
+		sendbuf[13+25*iii]=*(floatdata+2);
+		sendbuf[14+25*iii]=*(floatdata+3);
+		sendbuf[15+25*iii]=0; //5个参数		
+		
+		floatdata=(uint8_t *)&g_SystemParam_Param.Vrms[ii];
+		sendbuf[16+25*iii]=*floatdata;
+		sendbuf[17+25*iii]=*(floatdata+1);
+		sendbuf[18+25*iii]=*(floatdata+2);
+		sendbuf[19+25*iii]=*(floatdata+3);
+		sendbuf[20+25*iii]=0;
+		
+		
+		
+		floatdata=(uint8_t *)&g_SystemParam_Param.Drms[ii];
+		sendbuf[21+25*iii]=*floatdata;
+		sendbuf[22+25*iii]=*(floatdata+1);
+		sendbuf[23+25*iii]=*(floatdata+2);
+		sendbuf[24+25*iii]=*(floatdata+3);
+		sendbuf[25+25*iii]=0;
+		
+		
+			
+		floatdata=(uint8_t *)&g_SystemParam_Param.KurtosisIndex[ii];
+		sendbuf[26+25*iii]=*floatdata;
+		sendbuf[27+25*iii]=*(floatdata+1);
+		sendbuf[28+25*iii]=*(floatdata+2);
+		sendbuf[29+25*iii]=*(floatdata+3);
+		sendbuf[30+25*iii]=0;
+		
+	
+			
+		floatdata=(uint8_t *)&g_SystemParam_Param.Envelop[ii];
+		sendbuf[31+25*iii]=*floatdata;
+		sendbuf[32+25*iii]=*(floatdata+1);
+		sendbuf[33+25*iii]=*(floatdata+2);
+		sendbuf[34+25*iii]=*(floatdata+3);
+		sendbuf[35+25*iii]=0;
+		iii++;
+	} 
+	iii--;
+	
+
+	floatdata=(uint8_t *)&g_SystemParam_Param.pdate;
+	sendbuf[36+25*2]=*floatdata;
+	sendbuf[37+25*2]=*(floatdata+1);
+	sendbuf[38+25*2]=*(floatdata+2);
+	sendbuf[39+25*2]=*(floatdata+3);
+	sendbuf[40+25*2]=0;
+
+	floatdata=(uint8_t *)&g_SystemParam_Config.battery;
+	sendbuf[41+25*2]=*floatdata;
+	sendbuf[42+25*2]=*(floatdata+1);
+	sendbuf[43+25*2]=*(floatdata+2);
+	sendbuf[44+25*2]=*(floatdata+3);
+	sendbuf[45+25*2]=0;
+	
+	uint32_t length=85+7;
+	sendbuf[2]=(uint8_t)length;
+	sendbuf[3]=(uint8_t)(length>>8);
+	sendbuf[46+25*2]=0;
+	for(uint8_t i=1;i<(46+25*2);i++)
+	sendbuf[46+25*2]+=sendbuf[i];
+	sendbuf[47+25*2]=0x7e;
+
+	BSP_ESP32_TX_Enqueue(sendbuf,(48+25*2));
+	
+	vPortFree(sendbuf);
+	
+}
+
+
+
+
+
+
+
+
+
+
 
 
 

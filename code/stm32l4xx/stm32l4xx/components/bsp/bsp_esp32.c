@@ -54,7 +54,7 @@
 #define      macUser_Esp32_ApSsid                         "yec-test"   // "Tenda_4F7AC0"//"yec-test"                //要连接的热点的名称
 #define      macUser_Esp32_ApPwd                          ""           //要连接的热点的密钥
 
-#define      macUser_Esp32_TcpServer_IP                   "192.168.100.233"//"192.168.0.112"// //     //要连接的服务器的 IP
+#define      macUser_Esp32_TcpServer_IP                   "192.168.100.234"//"192.168.0.112"// //     //要连接的服务器的 IP
 #define      macUser_Esp32_TcpServer_Port                 "8712"  			//"8712"//             //要连接的服务器的端口
 
 /**
@@ -76,15 +76,17 @@
  * @brief         
  * @{  
  */
+ 
+#define BSP_ESP32_TX_BUF_LEN   600 
 typedef struct
 {
-	uint8_t buf[1024];
+	uint8_t buf[BSP_ESP32_TX_BUF_LEN];
 	uint16_t len;
 }BSP_ESP32_Txbuf_t;
 
 typedef struct
 {
-	BSP_ESP32_Txbuf_t txbuf[64];
+	BSP_ESP32_Txbuf_t txbuf[100];
 	uint8_t in;
 	uint8_t out;
 	uint8_t count;
@@ -106,7 +108,7 @@ BSP_ESP32_TxQueue_t BSP_ESP32_TxQueue =
 	.in = 0,
 	.out = 0,
 	.count = 0,
-	.size = 64,
+	.size = 100,
 };
 
 
@@ -138,7 +140,7 @@ static ESP32_Inf_t ESP32_Inf =
 static int8_t bsp_esp32_rev(uint8_t * buf , uint16_t len);
 static void esp32_core_cmd_init(void);
 static void esp32_setmodule_status(uint8_t status_kind , uint8_t status); // set esp32 module statusss
-
+static void BSP_ESP32_TX_Queue_Init(void);
 /**
  * @}
  */
@@ -563,14 +565,22 @@ void ESP32_Loop(void)  // esp32 core func
 
 void BSP_ESP32_TX_Enqueue(uint8_t * buf, uint16_t len)
 {
-	memcpy(BSP_ESP32_TxQueue.txbuf[BSP_ESP32_TxQueue.in].buf , buf , len);
-	BSP_ESP32_TxQueue.txbuf[BSP_ESP32_TxQueue.in].len = len;
-	BSP_ESP32_TxQueue.in ++ ; 
-	BSP_ESP32_TxQueue.count ++;
-	
-	BSP_ESP32_TxQueue.in %= BSP_ESP32_TxQueue.size;
-	DEBUG("BSP_ESP32_TxQueue.count is %d\r\n",BSP_ESP32_TxQueue.count);
-	Net_Task_Event_Start(NET_TASK_SEND_EVENT, EVENT_FROM_TASK);
+	if(len >BSP_ESP32_TX_BUF_LEN || len == 0)
+	{
+		DEBUG("BSP_ESP32_TX_Enqueue Len :%d\r\n",len);
+		return;
+	}
+	else
+	{
+		memcpy(BSP_ESP32_TxQueue.txbuf[BSP_ESP32_TxQueue.in].buf , buf , len);
+		BSP_ESP32_TxQueue.txbuf[BSP_ESP32_TxQueue.in].len = len;
+		BSP_ESP32_TxQueue.in ++ ; 
+		BSP_ESP32_TxQueue.count ++;
+		
+		BSP_ESP32_TxQueue.in %= BSP_ESP32_TxQueue.size;
+		DEBUG("BSP_ESP32_TX_Enqueue count:%d ,len:%d\r\n",BSP_ESP32_TxQueue.count ,len );
+		Net_Task_Event_Start(NET_TASK_SEND_EVENT, EVENT_FROM_TASK);		
+	}
 }
 
 
@@ -611,7 +621,7 @@ void BSP_ESP32_Tx_Task(void)
 	}
 	else
 	{
-		
+		DEBUG("ESP32_Send BUSY\r\n");
 	}
 }
 
@@ -628,10 +638,22 @@ void BSP_ESP32_TxCheck(void)
 	}
 	else
 	{
+		BSP_ESP32_TX_Queue_Init();
 		ESP32_Inf.DataSend_status = ESP32_Send_IDLE;
+		DEBUG("ESP32_Send_IDLE & TxQueue.count :%d\r\n",BSP_ESP32_TxQueue.count);
 	}
 }
 
+static void BSP_ESP32_TX_Queue_Init(void)
+{
+	if(BSP_ESP32_TxQueue.count == 0)
+	{
+		if(BSP_ESP32_TxQueue.in != BSP_ESP32_TxQueue.out)
+		{
+			BSP_ESP32_TxQueue.out = BSP_ESP32_TxQueue.in;
+		}
+	}
+}
 
 /**
  * @}

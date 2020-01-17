@@ -457,24 +457,19 @@
               <FilePath>..\source\application\first_task\first_task.c</FilePath>
             </File>
             <File>
-              <FileName>hal_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\source\application\hal_task\hal_task.c</FilePath>
-            </File>
-            <File>
               <FileName>second_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\source\application\second_task\second_task.c</FilePath>
             </File>
             <File>
+              <FileName>hal_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\source\application\hal_task\hal_task.c</FilePath>
+            </File>
+            <File>
               <FileName>net_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\source\application\net_task\net_task.c</FilePath>
-            </File>
-            <File>
-              <FileName>datasend_task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\source\application\datasend_task\datasend_task.c</FilePath>
             </File>
             <File>
               <FileName>dataprocess_task.c</FileName>
@@ -485,6 +480,11 @@
               <FileName>dataemu_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\source\application\dataemu_task\dataemu_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>datasend_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\source\application\datasend_task\datasend_task.c</FilePath>
             </File>
             <File>
               <FileName>temperature_task.c</FileName>

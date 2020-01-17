@@ -124,8 +124,6 @@ static void app_confnet_receive_beacon(uint8_t * buf , uint16_t len)
 	DEBUG("app_confnet_receive_beacon\r\n");
 	BSP_ESP32_TX_Enqueue(buf,  len);	
 }
-	
-
 
 static void app_confnet_esp32_status(uint8_t * value_buf , uint16_t value_len)  // enter value buf things
 {

@@ -119,7 +119,7 @@ uint32_t Net_Task_Init(void)
 	BaseType_t basetype = { 0 };
 	basetype = xTaskCreate(Net_Task,\
 							"Net_Task",\
-							1024,
+							256,
 							NULL,
 							2,
 							&Net_Task_Handle);
@@ -153,7 +153,7 @@ void Net_Task(void * pvParameter)
 	while(1)
 	{
 		DEBUG("Net Task Looping\r\n");
-		Bsp_LedToggle(BSP_LED_TEST);
+		//Bsp_LedToggle(BSP_LED_TEST);
 		
 		xTaskNotifyWait(0x00,ULONG_MAX,&event_flag , portMAX_DELAY);
 	
@@ -192,7 +192,7 @@ void Net_Task(void * pvParameter)
 void Net_Task_Event_Start(uint32_t events, uint8_t event_from)
 {
 	BaseType_t HigherPriorityTaskWoken = pdFALSE;
-	DEBUG("Net_Task_Event_Start:%X\r\n" , events );
+	DEBUG("Net_Task_Event_Start:0x%04X\r\n" , events );
 	switch(event_from)
 	{
 		case EVENT_FROM_TASK:

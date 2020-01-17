@@ -28,10 +28,10 @@
  * @{  
  */
 
-#define NET_TASK_REV_EVENT			(0X01 << 1)
-#define NET_TASK_POWER_REST_EVENT 	(0X01 << 2)
-#define NET_TASK_LOOP_EVENT			(0x01 << 3)
-#define NET_TASK_SEND_EVENT			(0x01 << 4)
+#define NET_TASK_REV_EVENT			(0X01 << 0)
+#define NET_TASK_POWER_REST_EVENT 	(0X01 << 1)
+#define NET_TASK_LOOP_EVENT			(0x01 << 2)
+#define NET_TASK_SEND_EVENT			(0x01 << 3)
 /*
  * @}
  */

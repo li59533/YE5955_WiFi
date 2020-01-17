@@ -24,6 +24,10 @@
 #include "arm_math.h"
 #include "double_integral.h"
 #include "clog.h"
+#include "datasend_task.h"
+
+
+#include "FreeRTOS.h"
 /**
  * @addtogroup    app_dataemu_Modules 
  * @{  
@@ -106,22 +110,12 @@ static void app_dataemu_func(void);
  */
 void APP_DataEmu_Process(void)
 {
-	//WaritSignalCounter++;
-	//if(WaritSignalCounter > g_SystemParam_Config.WaitforIEPEtime) //d等待信号滤波稳定开始发送数据
-	{
 
-		
-		//BSP_AD7682_StopSample();
-		//SystemParam_Save();
+	app_dataemu_func();
 
-		app_dataemu_func();
-
-		//Boardg_SystemParam_Param_withtime_forJUNYUE();
-
-	}
 }
 #define numStages 2 /* 2阶IIR滤波的个数 */
-float32_t testOutput[16384] ;//////输出结果
+
 float32_t IIRStateF32[4*numStages]; /* 状态缓存，大小numTaps + blockSize - 1*/
 /* 巴特沃斯低通滤波器系数 140Hz */
 const float32_t IIRCoeffs16384_1600HP[5*numStages] = {
@@ -156,10 +150,11 @@ const float IIRCoeffs16384_1000LP[5*numStages] = {
 };
 const float sacle16384_1000LP=0.031769742501897576f*0.026989082971902483f;
 
-float emu_inter_data[16384];
+//float emu_inter_data[16384];
+//float32_t testOutput[16384] ;//////输出结果
 arm_biquad_casd_df1_inst_f32 S_test;
-float fft_data[4096];
-float fft_inter_data[4096];
+//float fft_data[4096];
+//float fft_inter_data[4096];
 
 static void app_dataemu_func(void)
 {
@@ -172,20 +167,35 @@ static void app_dataemu_func(void)
 	
 	uint8_t j = 0 ;
 	
+	float * emu_inter_data = 0;
+	float * testOutput = 0;
 	
-	for(j = 0 ; j < BSP_AD7682_ACC_REALCHS ; j ++)
+	float * fft_data = 0;
+	float * fft_inter_data = 0;
+	
+	emu_inter_data = pvPortMalloc(sizeof(float) * 16384); //vPortFree()
+	testOutput = pvPortMalloc(sizeof(float) * 16384);
+	
+	DEBUG("xPortGetFreeHeapSize:%d\r\n",xPortGetFreeHeapSize());
+	
+	
+	
+	for(j = 0 ; j < g_SystemParam_Param.acceleration_adchs ; j ++)
 	{
 		inter_factor = g_SystemParam_Config.floatscale[j] * g_SystemParam_Config.floatadc[j] * 0.045776f  ;//3000 / 65535;
+		
 		switch(j)
 		{
 			case 0: 
 				for(uint32_t i=0;i<g_SystemParam_Config.channel_freq[j];i++)
-				emu_inter_data[i]=inter_factor * piz_emu_data[SAMPLEblock][i];
+				{
+					emu_inter_data[i]=inter_factor * piz_emu_data[SAMPLEblock][i];
+				}
 			break;
 			default:
 				for(uint32_t i=0;i<g_SystemParam_Config.channel_freq[j];i++)
 				{
-					emu_inter_data[i]=inter_factor*mems_emu_data[SAMPLEblock][j -1][i];
+					emu_inter_data[i]=inter_factor * mems_emu_data[SAMPLEblock][j -1][i];
 				}
 			break;
 		}
@@ -194,7 +204,7 @@ static void app_dataemu_func(void)
 		for(uint32_t i=0;i<g_SystemParam_Config.channel_freq[j];i++)
 			emu_inter_data[i] = test11[0]*arm_sin_f32(2*3.1415926f*test11[1]*i/g_SystemParam_Config.channel_freq[j]);
 		*/
-		
+		fft_data = pvPortMalloc(sizeof(float) * 4096);
 		switch(g_SystemParam_Config.channel_freq[j])
 		{
 			case 16384:
@@ -240,6 +250,8 @@ static void app_dataemu_func(void)
 			break;
 		}         
 		
+		fft_inter_data = pvPortMalloc(sizeof(float) * 4096);
+		
 		arm_rms_f32(fft_data, 4096, &g_SystemParam_Param.Arms[j]);
 		integ_init(4096,4096,1000,1,4,1000);  //速度到4
 		frq_domain_integral(fft_data,fft_inter_data);
@@ -255,7 +267,10 @@ static void app_dataemu_func(void)
 			arm_max_f32(fft_inter_data, 4096, &EnvelopMax[j],&maxindex);
 			arm_sqrt_f32(EnvelopMax[j],&g_SystemParam_Param.Envelop[j]);
 		}
-
+		
+		vPortFree(fft_inter_data);
+		vPortFree(fft_data);
+		
 		arm_mean_f32(emu_inter_data, g_SystemParam_Config.channel_freq[j], &avage[j]); //求均值
 
 		for(uint32_t i=0;i<g_SystemParam_Config.channel_freq[j];i++)
@@ -314,6 +329,9 @@ static void app_dataemu_func(void)
 		
 		
 	}	
+	vPortFree(emu_inter_data);
+	vPortFree(testOutput);
+	
 }
 
 

@@ -111,7 +111,7 @@ uint32_t Temperature_Task_Init(void)
 	BaseType_t basetype = { 0 };
 	basetype = xTaskCreate(Temperature_Task,\
 							"Temperature_Task",\
-							512,
+							128,
 							NULL,
 							4,
 							&Temperature_Task_Handle);
@@ -128,7 +128,7 @@ void Temperature_Task(void * pvParameter)
 	
 	while(1)
 	{
-		//DEBUG("Temperature Task Looping\r\n");
+
 		BSP_LMT01_StartGetValue();
 		vTaskDelay(pdMS_TO_TICKS(2000));
 		
@@ -136,8 +136,12 @@ void Temperature_Task(void * pvParameter)
 		
 		DEBUG("RTC: %d \r\n",rtc_data.Sec);
 		APP_Conf_ReportData();
-		//snprintf(str_temp,30,"%0.3f",g_SystemParam_Param.pdate);
-		//DEBUG("Temperature:%s\r\n",str_temp);
+
+		
+		UBaseType_t firsttask_ramainheap = 0;
+		firsttask_ramainheap = uxTaskGetStackHighWaterMark(NULL);
+		DEBUG("Temperature_Task ramain heap:%d \r\n",firsttask_ramainheap);	
+		
 	}
 }
 							

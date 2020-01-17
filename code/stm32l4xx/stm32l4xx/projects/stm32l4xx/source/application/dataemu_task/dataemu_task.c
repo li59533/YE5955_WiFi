@@ -27,6 +27,8 @@
 #include "bsp_led.h"
 #include "timers.h"
 #include "app_dataemu.h"
+#include "datasend_task.h"
+#include "app_datasend.h"
 /**
  * @addtogroup    dataemu_task_Modules 
  * @{  
@@ -114,7 +116,7 @@ uint32_t DataEmu_Task_Init(void)
 	BaseType_t basetype = { 0 };
 	basetype = xTaskCreate(DataEmu_Task,\
 							"DataEmu_Task",\
-							1024,
+							256,
 							NULL,
 							3,
 							&DataEmu_Task_Handle);
@@ -130,8 +132,19 @@ void DataEmu_Task(void * pvParameter)
 		
 		if((event_flag & DATAEMU_TASK_EMU_EVENT) != 0x00)
 		{
+
+			BoardAutoPeroidWave();
 			DEBUG("DATAEMU_TASK_EMU_EVENT\r\n");
+			Bsp_LedToggle(BSP_LED_TEST);
 			APP_DataEmu_Process();
+			Bsp_LedToggle(BSP_LED_TEST);
+			DataSend_Task_Event_Start(DATASEND_TASK_SEND_EVENT, EVENT_FROM_TASK);
+			
+			UBaseType_t firsttask_ramainheap = 0;
+			firsttask_ramainheap = uxTaskGetStackHighWaterMark(NULL);
+			DEBUG("DataEmu_Task ramain heap:%d \r\n",firsttask_ramainheap);			
+			
+			
 		}
 
 	}

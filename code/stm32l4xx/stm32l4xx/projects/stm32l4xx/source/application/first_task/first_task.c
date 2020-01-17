@@ -142,8 +142,7 @@ void First_Task(void * pvParameter)
 		{
 			DEBUG("First Task FIRST_TASK_TEST2_EVENT\r\n");
 		}		
-		
-		
+
 	}
 	
 }

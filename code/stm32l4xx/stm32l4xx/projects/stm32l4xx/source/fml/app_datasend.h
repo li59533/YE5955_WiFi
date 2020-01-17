@@ -82,6 +82,7 @@ int8_t APP_Report_LowPowerValue(uint8_t channel_type);
 void BoardAutoPeroidWave(void);
 
 
+void APP_Report_CharacterValue(void );
 
 /**
  * @}

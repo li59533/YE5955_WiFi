@@ -23,6 +23,7 @@
 #include "dataprocess_task.h"
 #include "bsp_led.h"
 #include "dataemu_task.h"
+#include "datasend_task.h"
 /**
  * @addtogroup    app_datafilter_Modules 
  * @{  
@@ -314,13 +315,13 @@ void APP_DataFilter_Process(void)
 	//			bsp_LedStatue(1,1);
 
 }
-//int16_t test_wave[4] = {0};
+int16_t test_wave[4] = {0};
 void APP_DataFilter_UpdateAccData(int16_t data , uint8_t channel , uint32_t DataIndex)
 {
 	switch(channel){
 		case 0:
 			piz_emu_data[currentSAMPLEblock][DataIndex] = data;
-			//test_wave[0] = data;
+			test_wave[0] = data;
 			//test_wave = data;
 		break;
 		case 1:

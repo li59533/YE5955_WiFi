@@ -113,12 +113,12 @@ uint32_t DataSend_Task_Init(void)
 	BaseType_t basetype = { 0 };
 	basetype = xTaskCreate(DataSend_Task,\
 							"DataSend Task",\
-							1024,
+							256,
 							NULL,
 							3,
 							&DataSend_Task_Handle);
 	
-	DataSend_Task_Tim_Init();
+	//DataSend_Task_Tim_Init();
 	
 	return basetype;
 }
@@ -127,7 +127,7 @@ uint32_t DataSend_Task_Init(void)
 void DataSend_Task(void * pvParameter)
 {
 	uint32_t event_flag = 0;
-	DataSend_Task_StartTim(2000);
+	//DataSend_Task_StartTim(2000);
 	DEBUG("DataSend Task Enter\r\n");
 
 	while(1)
@@ -137,10 +137,13 @@ void DataSend_Task(void * pvParameter)
 		if((event_flag & DATASEND_TASK_SEND_EVENT) != 0x00)
 		{
 			DEBUG("DATASEND_TASK_SEND_EVENT\r\n");
-			APP_DataSend_SendCharacteristic();
-			BoardAutoPeroidWave();
+			//APP_DataSend_SendCharacteristic();
+			APP_Report_CharacterValue();
+
+			UBaseType_t firsttask_ramainheap = 0;
+			firsttask_ramainheap = uxTaskGetStackHighWaterMark(NULL);
+			DEBUG("DataSend_Task ramain heap:%d \r\n",firsttask_ramainheap);	
 			
-			DataSend_Task_StartTim(1000);
 		}
 		if((event_flag & DATASEND_TASK_SEND_DEVICE_INF_EVENT) != 0x00)
 		{

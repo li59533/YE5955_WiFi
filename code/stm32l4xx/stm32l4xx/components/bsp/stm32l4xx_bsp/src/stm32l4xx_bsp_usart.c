@@ -334,7 +334,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
 		HAL_DMA_Init(&hdma);
 		
 		//__HAL_DMA_ENABLE_IT(hdma, DMA_IT_TC) 
-		HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 3, 0);
+		HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 1, 0);
 		HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
 		
 		
@@ -459,19 +459,8 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
 // ------------------USART1_IRQHandler------------------
 void BSP_Usart1_IRQHandler(void)
 {
-//	if(__HAL_UART_GET_IT(&husart1, UART_IT_IDLE) == SET)
-//	{
-//		DEBUG("Uart1  Idle rev len :%d\r\n",__HAL_DMA_GET_COUNTER(husart1.hdmarx) );
-//	
-////		BSP_Queue_Enqueue( BSP_QUEUE_UART1_REV , bsp_usart1_rx , usart1_i);
-////		memset(bsp_usart1_rx , 0 , sizeof(bsp_usart1_rx));
-////		usart1_i = 0;
-//		__HAL_UART_CLEAR_IDLEFLAG(&husart1);
-//		DEBUG("ENTER Uart1 IDLE \r\n");
-//	}
 	HAL_UART_IRQHandler( &husart1);
-	__HAL_UART_CLEAR_OREFLAG(&husart1);
-	
+	//__HAL_UART_CLEAR_OREFLAG(&husart1);
 }
 
 // ------------------USART2_IRQHandler------------------

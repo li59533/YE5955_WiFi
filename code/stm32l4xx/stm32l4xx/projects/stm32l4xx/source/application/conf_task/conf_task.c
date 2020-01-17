@@ -115,7 +115,7 @@ uint32_t Conf_Task_Init(void)
 	BaseType_t basetype = { 0 };
 	basetype = xTaskCreate(Conf_Task,\
 							"Conf Task",\
-							512,
+							128,
 							NULL,
 							2,
 							&Conf_Task_Handle);
@@ -152,6 +152,10 @@ void Conf_Task(void * pvParameter)
 			DEBUG("Conf Task FIRST_TASK_TEST2_EVENT\r\n");
 		}		
 
+		UBaseType_t firsttask_ramainheap = 0;
+		firsttask_ramainheap = uxTaskGetStackHighWaterMark(NULL);
+		DEBUG("Conf_Task ramain heap:%d \r\n",firsttask_ramainheap);	
+		
 	}
 	
 }

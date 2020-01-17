@@ -39,7 +39,7 @@
  * @brief         
  * @{  
  */
-#define BSP_AD7682_SAMPLE_CFG 		0x3A71
+#define BSP_AD7682_SAMPLE_CFG 		0x3A71  // bin 0011101001110001
 /**
  * @}
  */

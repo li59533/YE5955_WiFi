@@ -119,7 +119,7 @@ uint32_t Hal_Task_Init(void)
 	BaseType_t basetype = { 0 };
 	basetype = xTaskCreate(Hal_Task,\
 							"hal Task",\
-							256,
+							128,
 							NULL,
 							3,
 							&Hal_Task_Handle);
@@ -159,9 +159,9 @@ void Hal_Task(void * pvParameter)
 			if(hal_pwr_flag == 1)
 			{
 				DEBUG("HAL_TASK_STANDBY_EVENT\r\n");
-				SystemParam_Save();
-				RTOS_Delay_ms(5000);
-				APP_Power_EnterStandbyMode(g_SystemParam_Config.sleep_time);				
+//				SystemParam_Save();
+//				RTOS_Delay_ms(5000);
+//				APP_Power_EnterStandbyMode(g_SystemParam_Config.sleep_time);				
 			}
 			else
 			{
