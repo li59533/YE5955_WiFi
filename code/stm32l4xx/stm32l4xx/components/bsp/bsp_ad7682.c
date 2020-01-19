@@ -39,7 +39,8 @@
  * @brief         
  * @{  
  */
-#define BSP_AD7682_SAMPLE_CFG 		0x3A71  // bin 0011101001110001
+										
+#define BSP_AD7682_SAMPLE_CFG 		 0x3A41// 0x3A71 : external 3.0V  ,0x3A41: internal 2.5V
 /**
  * @}
  */
