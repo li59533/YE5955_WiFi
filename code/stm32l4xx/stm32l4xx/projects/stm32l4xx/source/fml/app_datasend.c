@@ -1090,8 +1090,8 @@ void BoardAutoPeroidWave(void)
 					checksum += PeriodWaveToSend[j];
 				}
 				
-				PeriodWaveToSend[14+g_SystemParam_Param.periodboardpoints] = checksum;//checksum;  //2,3????????482??
-				PeriodWaveToSend[15+g_SystemParam_Param.periodboardpoints] = 0x7e; 
+				PeriodWaveToSend[14 + g_SystemParam_Param.periodboardpoints] = checksum;//checksum;  //2,3????????482??
+				PeriodWaveToSend[15 + g_SystemParam_Param.periodboardpoints] = 0x7e; 
 				packege_flag ++;
 				
 				if(packege_flag > 127)
@@ -1102,8 +1102,8 @@ void BoardAutoPeroidWave(void)
 				BSP_ESP32_TX_Enqueue(PeriodWaveToSend,g_SystemParam_Param.periodboardpoints+16);	
 
 				DEBUG("packege_No %d checksum : 0x%02X\r\n",packege_flag,checksum);
-				wpp=0;
-				checksum=0;
+				wpp = 0;
+				checksum = 0;
 				
 			}
 		}

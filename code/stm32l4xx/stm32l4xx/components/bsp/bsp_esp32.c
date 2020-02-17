@@ -51,10 +51,10 @@
 #define      macUser_Esp32_LocalGATAWAY                   "192.168.100.1"           
 #define      macUser_Esp32_LocalMASK                      "255.255.255.0"           
 
-#define      macUser_Esp32_ApSsid                         "yec-test"   // "Tenda_4F7AC0"//"yec-test"                //要连接的热点的名称
-#define      macUser_Esp32_ApPwd                          ""           //要连接的热点的密钥
+#define      macUser_Esp32_ApSsid                         "WiFi"   // "Tenda_4F7AC0"//"yec-test"                //要连接的热点的名称
+#define      macUser_Esp32_ApPwd                          "1234567890"           //要连接的热点的密钥
 
-#define      macUser_Esp32_TcpServer_IP                   "192.168.100.234"//"192.168.0.112"// //     //要连接的服务器的 IP
+#define      macUser_Esp32_TcpServer_IP                   "192.168.31.127"//"192.168.0.112"// //     //要连接的服务器的 IP
 #define      macUser_Esp32_TcpServer_Port                 "8712"  			//"8712"//             //要连接的服务器的端口
 
 /**
@@ -591,9 +591,23 @@ uint8_t * BSP_ESP32_TX_Dequeue(uint16_t * len)
 	buf_ptr = BSP_ESP32_TxQueue.txbuf[BSP_ESP32_TxQueue.out].buf ; 
 	* len = BSP_ESP32_TxQueue.txbuf[BSP_ESP32_TxQueue.out].len;
 	BSP_ESP32_TxQueue.out ++;
-	BSP_ESP32_TxQueue.count -- ;
+	
+	
+	
+	
+	//BSP_ESP32_TxQueue.count -- ;
 	
 	BSP_ESP32_TxQueue.out %= BSP_ESP32_TxQueue.size;
+	
+	if(BSP_ESP32_TxQueue.out <= BSP_ESP32_TxQueue.in)
+	{
+		BSP_ESP32_TxQueue.count = BSP_ESP32_TxQueue.in - BSP_ESP32_TxQueue.out;
+	}
+	else
+	{
+		BSP_ESP32_TxQueue.count = BSP_ESP32_TxQueue.in + BSP_ESP32_TxQueue.size - BSP_ESP32_TxQueue.out;
+	}
+	
 	
 	
 	return buf_ptr;
@@ -650,6 +664,8 @@ static void BSP_ESP32_TX_Queue_Init(void)
 	{
 		if(BSP_ESP32_TxQueue.in != BSP_ESP32_TxQueue.out)
 		{
+			
+			DEBUG("WHY in unequl out ,and the count is 0\r\n");
 			BSP_ESP32_TxQueue.out = BSP_ESP32_TxQueue.in;
 		}
 	}

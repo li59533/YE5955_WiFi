@@ -618,6 +618,11 @@
           <GroupName>Bsp</GroupName>
           <Files>
             <File>
+              <FileName>bsp_esp32.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\components\bsp\bsp_esp32.c</FilePath>
+            </File>
+            <File>
               <FileName>bsp_init.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\components\bsp\bsp_init.c</FilePath>
@@ -696,11 +701,6 @@
               <FileName>bsp_lmt01.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\..\components\bsp\bsp_lmt01.c</FilePath>
-            </File>
-            <File>
-              <FileName>bsp_esp32.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\components\bsp\bsp_esp32.c</FilePath>
             </File>
             <File>
               <FileName>bsp_lm78.c</FileName>
