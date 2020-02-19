@@ -64,6 +64,7 @@
  * @{  
  */
 void System_Load(void);
+void System_Rest(void);
 /**
  * @}
  */

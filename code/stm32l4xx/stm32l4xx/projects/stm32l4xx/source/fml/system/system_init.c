@@ -14,7 +14,7 @@
 #include "system_param.h"
 #include "system_init.h"
 #include "bsp_init.h"
-
+#include "stm32_bsp_conf.h"
 /**
  * @addtogroup    XXX 
  * @{  
@@ -109,6 +109,13 @@ void System_Load()
     /* init param module,read and apply params */
     
 }
+
+void System_Rest(void)
+{
+	HAL_NVIC_SystemReset();	 
+}
+
+
 /**
  * @}
  */

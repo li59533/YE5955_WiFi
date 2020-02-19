@@ -162,7 +162,7 @@ void APP_DataFilter_Init(void)
 	AD_ZERO[1]= BSP_AD7682_Getcurvalue(1) * 8192;   //如果是压电，这个很好去确定初值，可是mems跟重力方向有关，有必要重新采集确定初值
 	AD_ZERO[2]= BSP_AD7682_Getcurvalue(3) * 8192;  //两个采样率不一样
 	APP_DataFilter_SpraseIndex();
-	BSP_AD7682_StartSample();
+	//BSP_AD7682_StartSample();
 }
 
 void APP_DataFilter_Process(void)

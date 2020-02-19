@@ -65,20 +65,15 @@
  */
  
 int8_t APP_DataSend_SendCharacteristic(void);
+
+
 void APP_DataSend_NetConnected(void);
-int8_t APP_Report_ChannelKind(uint8_t channel_type) ;  // 
-int8_t APP_Report_ID(uint8_t channel_type) ;  // 
-int8_t APP_Report_Version(uint8_t channel_type) ;  // 
-int8_t APP_Report_ChannelCondition(uint8_t channel_type); 
-int8_t APP_Report_SampleParam(uint8_t channel_type) ;
-int8_t APP_Report_APinf(uint8_t channel_type)  ;
-int8_t APP_Report_TCPServer(uint8_t channel_type) ;  
-int8_t APP_Report_RunMode(uint8_t channel_type)   ;
-int8_t APP_Report_IPinf(uint8_t channel_type)  ;
-int8_t APP_Report_LowPower(uint8_t channel_type)  ;
-int8_t APP_Report_Scale(uint8_t channel_type)  ;
-int8_t APP_Report_AlarmValue(uint8_t channel_type);
-int8_t APP_Report_LowPowerValue(uint8_t channel_type); 
+
+
+
+
+
+
 void BoardAutoPeroidWave(void);
 
 

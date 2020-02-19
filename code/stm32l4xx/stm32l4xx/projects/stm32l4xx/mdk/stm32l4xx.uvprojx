@@ -819,6 +819,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\..\components\bsp\double_integral.c</FilePath>
             </File>
+            <File>
+              <FileName>stm32l4_bsp_iap.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\..\components\bsp\stm32l4_bsp_iap.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

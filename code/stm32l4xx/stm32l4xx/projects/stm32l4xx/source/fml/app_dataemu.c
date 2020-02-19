@@ -182,7 +182,7 @@ static void app_dataemu_func(void)
 	
 	for(j = 0 ; j < g_SystemParam_Param.acceleration_adchs ; j ++)
 	{
-		inter_factor = g_SystemParam_Config.floatscale[j] * g_SystemParam_Config.floatadc[j] * 0.03814755f  ;//3000 / 65535;
+		inter_factor = g_SystemParam_Config.floatscale[j] * g_SystemParam_Config.floatadc[j] * 0.03814755f  ;//2500 / 65535;
 		
 		switch(j)
 		{

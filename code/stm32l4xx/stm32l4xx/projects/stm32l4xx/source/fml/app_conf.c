@@ -318,7 +318,7 @@ static void app_setconfreq_process(uint8_t *payload,uint16_t len)
 			break;
 			case TAG_CONF_SLEEPTIME:
 			{
-				if((tlv_buf->Value.BIT_32 <= 86400)&&(tlv_buf->Value.BIT_32 >= 0))   // < 1 day (86400 s) and >= 0 s
+				if((tlv_buf->Value.BIT_32 <= 86400)&&(tlv_buf->Value.BIT_32 > 0))   // < 1 day (86400 s) and >= 0 s
 				{
 					g_SystemParam_Config.sleep_time = tlv_buf->Value.BIT_32;
 				}
@@ -620,7 +620,7 @@ void APP_Conf_FromLora(uint8_t *buf , uint8_t len )
 			{
 				uint32_t sleeptime_temp = (uint32_t)(conf_buf[1] << 24 | conf_buf[2] << 16 | conf_buf[3] << 8 | conf_buf[4]);// 
 				DEBUG("APP_CONF Lora sleepTime:%d s\r\n" , sleeptime_temp);
-				if((sleeptime_temp <= 86400)&&(sleeptime_temp >= 0))   // < 1 day (86400 s) and >= 0 s
+				if((sleeptime_temp <= 86400)&&(sleeptime_temp > 0))   // < 1 day (86400 s) and >= 0 s
 				{
 					g_SystemParam_Config.sleep_time = sleeptime_temp;
 					SystemParam_Save();

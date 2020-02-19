@@ -54,6 +54,9 @@
 #define LN_P_RECEIVE_BEACON				0X11
 #define LN_P_R_CHARACTER_VALUE			0x74
 
+#define LN_P_R_IAP_ERASE				0x83
+#define LN_P_R_IAP_DATA					0x82
+
 /**
  * @}
  */

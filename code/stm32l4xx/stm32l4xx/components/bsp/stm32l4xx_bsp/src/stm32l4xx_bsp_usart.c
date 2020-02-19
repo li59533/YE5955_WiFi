@@ -85,9 +85,9 @@ typedef struct
 
 // --- Usart data space ---
 
-static uint8_t bsp_usart1_tx[BSP_USART1_TX_SIZE] = { 0 };
+//static uint8_t bsp_usart1_tx[BSP_USART1_TX_SIZE] = { 0 };
 static uint8_t bsp_usart1_rx[BSP_USART1_RX_SIZE] = { 0 };
-static uint8_t bsp_usart2_tx[BSP_USART2_TX_SIZE] = { 0 };
+//static uint8_t bsp_usart2_tx[BSP_USART2_TX_SIZE] = { 0 };
 static uint8_t bsp_usart2_rx[BSP_USART2_RX_SIZE] = { 0 };
 // ------------------------
 

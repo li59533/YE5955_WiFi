@@ -212,67 +212,90 @@ void BSP_ESP32_WriteBytes(uint8_t *buf , uint16_t len)
 	BSP_Usart_WriteBytes_DMA(BSP_UART_1 , buf , len);
 }
 
+typedef struct
+{
+	uint8_t buf[300];
+	uint8_t len;
+}rev_data_t;
+
+rev_data_t break_buf = { 0 };
+rev_data_t temp_buf = { 0 };
+rev_data_t full_buf = { 0 };
+
 
 static int8_t bsp_esp32_rev(uint8_t * buf , uint16_t len)
 {
-	DEBUG("Esp32 len = %d\r\n" , len);
 	uint16_t i = 0; 
 	
-	if(len < 6)    // first check len
-	{
-		DEBUG("Esp32 len is short\r\n");
-		return Len_Is_Short;
-	}
-	
+	memcpy( &temp_buf.buf[temp_buf.len] , buf, len );
+	temp_buf.len += len;
 	while(1)
 	{
-		if(buf[i] == LNPROTOCOL_STD_HEAD)   // check head 
+		if(temp_buf.buf[i] == LNPROTOCOL_STD_HEAD)   // check head 
 		{
-			DEBUG("NET Check Head Is OK\r\n");
-			if((buf[i + 2] + buf[i + 3] * 256) == len - 6) // check inf len 
+			if(temp_buf.buf[i + 1] == LNPROTOCOL_STD_HEAD)
 			{
-				DEBUG("NET Check inf len Pass\r\n");
-				if(LNprotocol_STD_Checksum( &buf[i] , len) == 1)
+				i++;
+				temp_buf.len--;
+			}
+			memcpy( &temp_buf.buf[0] , &temp_buf.buf[i], temp_buf.len); // offset
+			i = 0;
+			
+//			if(temp_buf.len < 4)
+//			{
+//				break;
+//			}
+//			else
+			{
+				if((temp_buf.buf[ 2] + temp_buf.buf[3] * 256) == (temp_buf.len - 6) ) // check inf len 
 				{
-					DEBUG("NET Check sum Pass Then Enter Anaglysis\r\n");
-					APP_ConfNet_Process(&buf[i] , len);   // deal with the cmd
-					break;
+					if(LNprotocol_STD_Checksum( &temp_buf.buf[0] , temp_buf.len) == 1) // check sum
+					{
+						APP_ConfNet_Process(&temp_buf.buf[0] , temp_buf.len);   // deal with the cmd
+					}					
+					temp_buf.len = 0;
 				}
 				else
 				{
-					DEBUG("NET Check sum Err\r\n");
-					return InValid;
+					if((temp_buf.buf[ 2] + temp_buf.buf[3] * 256) > (temp_buf.len - 6) && (temp_buf.buf[ 2] + temp_buf.buf[3] * 256) < 300)
+					{
+						break;
+					}
+					else if((temp_buf.buf[ 2] + temp_buf.buf[3] * 256) < (temp_buf.len - 6))
+					{
+						memcpy( &full_buf.buf[0] , &temp_buf.buf[0] , (temp_buf.buf[ 2] + temp_buf.buf[3] * 256) + 6 );
+						full_buf.len = (temp_buf.buf[ 2] + temp_buf.buf[3] * 256) + 6;
+						
+						temp_buf.len = temp_buf.len - (temp_buf.buf[ 2] + temp_buf.buf[3] * 256) - 6;
+						memcpy( &temp_buf.buf[0] , &temp_buf.buf[(temp_buf.buf[ 2] + temp_buf.buf[3] * 256) + 6], temp_buf.len); // offset
+						
+						if(LNprotocol_STD_Checksum( &full_buf.buf[0] , full_buf.len) == 1) // check sum
+						{
+							APP_ConfNet_Process(&full_buf.buf[0] , full_buf.len);   // deal with the cmd
+						}
+					}
+					else
+					{
+						temp_buf.len = 0;
+					}
 				}
-				
 			}
-			else
-			{
-				DEBUG("Check inf len err\r\n");
-				if(buf[i + len -1] == LNPROTOCOL_STD_FOOT) //check foot
-				{
-					return InValid;
-				}
-				else
-				{
-					break;
-				}
-			}
+			
 		}
 		else
 		{
 			i ++;
-			len --;
+			temp_buf.len --;
+
 		}
 		
-		
-		if(len == 0)
+		if(temp_buf.len <= 0)
 		{
-			return InValid;
-			
-		}
+			break;
+		}		
+		
 	}
-	
-	
+
 	return 0;
 }
 
