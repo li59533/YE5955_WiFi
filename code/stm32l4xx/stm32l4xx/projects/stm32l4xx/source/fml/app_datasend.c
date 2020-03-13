@@ -317,7 +317,7 @@ void BoardAutoPeroidWave(void)
 			break;
 		}
 		
-		inter_factor = g_SystemParam_Config.floatadc[ii] * g_SystemParam_Config.floatscale[ii] * 1500.0f / g_SystemParam_Config.floatrange[ii];
+		inter_factor = g_SystemParam_Config.floatadc[ii] * g_SystemParam_Config.floatscale[ii] * 1250.0f / g_SystemParam_Config.floatrange[ii];
 		
 		for(uint32_t i = 0 ; i < g_SystemParam_Config.channel_freq[ii] ; i ++) //*config.ADtime
 		{

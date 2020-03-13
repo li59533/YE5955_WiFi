@@ -150,10 +150,10 @@ void BSP_TIM_Init(void)
 		Error_Handler();
 	}	
 	
-	if (HAL_TIM_Base_Init(&htim5) != HAL_OK)
-	{
-		Error_Handler();
-	}	
+//	if (HAL_TIM_Base_Init(&htim5) != HAL_OK)
+//	{
+//		Error_Handler();
+//	}	
 	
 	sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
 	if (HAL_TIM_ConfigClockSource(&htim8, &sClockSourceConfig) != HAL_OK)
@@ -164,10 +164,10 @@ void BSP_TIM_Init(void)
 	{
 		Error_Handler();
 	}	
-	if (HAL_TIM_ConfigClockSource(&htim5, &sClockSourceConfig) != HAL_OK)
-	{
-		Error_Handler();
-	}	
+//	if (HAL_TIM_ConfigClockSource(&htim5, &sClockSourceConfig) != HAL_OK)
+//	{
+//		Error_Handler();
+//	}	
 	
 	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
 	sMasterConfig.MasterOutputTrigger2 = TIM_TRGO2_RESET;
@@ -179,7 +179,7 @@ void BSP_TIM_Init(void)
 	
 	
 	BSP_TIM3_Start();
-	DEBUG("TIM8 TIM3 TIM5 Init\r\n");
+	DEBUG("TIM8 TIM3  Init\r\n");
 	
 }	
 void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
@@ -270,7 +270,6 @@ void BSP_TIM5_IRQHandler(void)
 	{
 		TIM5->SR &= (uint16_t)~TIM_IT_UPDATE;
 		
-		BSP_UART1_REV_Complete();
 	}	
 	
 	

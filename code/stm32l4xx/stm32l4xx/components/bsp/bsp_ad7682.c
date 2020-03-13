@@ -40,7 +40,10 @@
  * @{  
  */
 										
-#define BSP_AD7682_SAMPLE_CFG 		 0x3A41// 0x3A71 : external 3.0V  ,0x3A41: internal 2.5V
+										
+//  00 1 111 XXX 1 110 00 1  0x3A71 //实际使用
+//  00 1 111 XXX 1 000 00 1  0x3A41 //2.5v内部基准 
+#define BSP_AD7682_SAMPLE_CFG 		 0x3A41// 0x3A71 : external 2.5V  ,0x3A41: internal 2.5V
 /**
  * @}
  */

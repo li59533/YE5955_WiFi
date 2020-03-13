@@ -51,10 +51,10 @@
 #define      macUser_Esp32_LocalGATAWAY                   "192.168.100.1"           
 #define      macUser_Esp32_LocalMASK                      "255.255.255.0"           
 
-#define      macUser_Esp32_ApSsid                         "WiFi"   // "Tenda_4F7AC0"//"yec-test"                //要连接的热点的名称
-#define      macUser_Esp32_ApPwd                          "1234567890"           //要连接的热点的密钥
+#define      macUser_Esp32_ApSsid                         "yec-test"   // "Tenda_4F7AC0"//"yec-test"                //要连接的热点的名称
+#define      macUser_Esp32_ApPwd                          "12345678"           //要连接的热点的密钥
 
-#define      macUser_Esp32_TcpServer_IP                   "192.168.31.127"//"192.168.0.112"// //     //要连接的服务器的 IP
+#define      macUser_Esp32_TcpServer_IP                   "192.168.100.109"//"192.168.0.112"// //     //要连接的服务器的 IP
 #define      macUser_Esp32_TcpServer_Port                 "8712"  			//"8712"//             //要连接的服务器的端口
 
 /**

@@ -345,8 +345,8 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
 		// ----------------------------------
 		
 		// --------NVIC configuration--------
-		//__HAL_UART_ENABLE_IT( &husart1, UART_IT_IDLE); 
-		//__HAL_UART_CLEAR_IDLEFLAG(&husart1);
+		__HAL_UART_ENABLE_IT( &husart1, UART_IT_IDLE); 
+		__HAL_UART_CLEAR_IDLEFLAG(&husart1);
 		HAL_NVIC_SetPriority(USART1_IRQn, 7, 0);
 		HAL_NVIC_EnableIRQ(USART1_IRQn);
 		// ----------------------------------
@@ -459,8 +459,23 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* huart)
 // ------------------USART1_IRQHandler------------------
 void BSP_Usart1_IRQHandler(void)
 {
+//	HAL_UART_IRQHandler( &husart1);
+//	//__HAL_UART_CLEAR_OREFLAG(&husart1);
+	
+	
+	if(__HAL_UART_GET_IT(&husart1, UART_IT_IDLE) == SET)
+	{
+		BSP_Queue_Enqueue( BSP_QUEUE_UART1_REV , bsp_usart1_rx , usart1_i);
+		memset(bsp_usart1_rx , 0 , sizeof(bsp_usart1_rx));
+		usart1_i = 0;
+		__HAL_UART_CLEAR_IDLEFLAG(&husart1);
+		//DEBUG("ENTER Uart2 IDLE \r\n");
+	}
+	
 	HAL_UART_IRQHandler( &husart1);
-	//__HAL_UART_CLEAR_OREFLAG(&husart1);
+	__HAL_UART_CLEAR_OREFLAG(&husart1);	
+	
+	
 }
 
 // ------------------USART2_IRQHandler------------------
@@ -507,19 +522,33 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 	if(huart->Instance == USART1)
 	{
 		
-		bsp_uart1_flow_rx.buf_ptr[bsp_uart1_flow_rx.in] = bsp_usart1_rxtemp;
-		bsp_uart1_flow_rx.in ++;
-		bsp_uart1_flow_rx.count ++;
+//		bsp_uart1_flow_rx.buf_ptr[bsp_uart1_flow_rx.in] = bsp_usart1_rxtemp;
+//		bsp_uart1_flow_rx.in ++;
+//		bsp_uart1_flow_rx.count ++;
+//		
+//		
+////		bsp_usart1_rx[usart1_i] = bsp_usart1_rxtemp;	
+////		usart1_i ++;
+////		if(usart1_i >= BSP_USART1_RX_SIZE)
+////		{
+////			usart1_i = 0;
+////		}
+//		HAL_UART_Receive_IT( &husart1 ,  &bsp_usart1_rxtemp, 1);
+//		BSP_TIM5_Start();
 		
 		
-//		bsp_usart1_rx[usart1_i] = bsp_usart1_rxtemp;	
-//		usart1_i ++;
-//		if(usart1_i >= BSP_USART1_RX_SIZE)
-//		{
-//			usart1_i = 0;
-//		}
-		HAL_UART_Receive_IT( &husart1 ,  &bsp_usart1_rxtemp, 1);
-		BSP_TIM5_Start();
+		
+		
+		bsp_usart1_rx[usart1_i] = bsp_usart1_rxtemp;
+		usart1_i ++;
+		if(usart1_i >= BSP_USART1_RX_SIZE)
+		{
+			usart1_i = 0;
+		}
+		HAL_UART_Receive_IT( &husart1 , &bsp_usart1_rxtemp, 1);		
+		
+		
+		
 	}
 
 	if(huart->Instance == USART2)

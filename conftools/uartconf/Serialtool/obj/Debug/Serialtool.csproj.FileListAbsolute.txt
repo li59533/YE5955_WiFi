@@ -1,0 +1,16 @@
+E:\github_project\WinFromSerialTool\code\Serialtool\bin\Debug\Serialtool.exe
+E:\github_project\WinFromSerialTool\code\Serialtool\bin\Debug\Serialtool.pdb
+E:\github_project\WinFromSerialTool\code\Serialtool\obj\Debug\Serialtool.csprojAssemblyReference.cache
+E:\github_project\WinFromSerialTool\code\Serialtool\obj\Debug\Serialtool.Form1.resources
+E:\github_project\WinFromSerialTool\code\Serialtool\obj\Debug\Serialtool.Properties.Resources.resources
+E:\github_project\WinFromSerialTool\code\Serialtool\obj\Debug\Serialtool.csproj.GenerateResource.cache
+E:\github_project\WinFromSerialTool\code\Serialtool\obj\Debug\Serialtool.exe
+E:\github_project\WinFromSerialTool\code\Serialtool\obj\Debug\Serialtool.pdb
+E:\github_project\YE5955_WiFi\conftools\uartconf\Serialtool\bin\Debug\Serialtool.exe
+E:\github_project\YE5955_WiFi\conftools\uartconf\Serialtool\bin\Debug\Serialtool.pdb
+E:\github_project\YE5955_WiFi\conftools\uartconf\Serialtool\obj\Debug\Serialtool.csprojAssemblyReference.cache
+E:\github_project\YE5955_WiFi\conftools\uartconf\Serialtool\obj\Debug\Serialtool.Form1.resources
+E:\github_project\YE5955_WiFi\conftools\uartconf\Serialtool\obj\Debug\Serialtool.Properties.Resources.resources
+E:\github_project\YE5955_WiFi\conftools\uartconf\Serialtool\obj\Debug\Serialtool.csproj.GenerateResource.cache
+E:\github_project\YE5955_WiFi\conftools\uartconf\Serialtool\obj\Debug\Serialtool.exe
+E:\github_project\YE5955_WiFi\conftools\uartconf\Serialtool\obj\Debug\Serialtool.pdb

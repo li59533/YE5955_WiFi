@@ -77,7 +77,7 @@ const SystemParam_Config_t SystemParam_Config_Default =
 	.addr = 1,//uint8_t addr; 
 	.SNnumber ={'G',100,0,0,0x31,0x00,0x99,0x00},//0x6275110032120001,//0x6275110032120003,//0x5955125011120002, 03 yec-test 101
 	.parity = 0, //uint8_t parity;		// =0 : n,8,1   =1: o,8,1  =2: e,8,1  
-	.floatscale = {0.3333f,0.075756f,0.075756f,1,1,1,1,1,1,1,1,1},
+	.floatscale = {1.0f,1.0f,1.0f,1,1,1,1,1,1,1,1,1}, // {0.3333f,0.075756f,0.075756f,1,1,1,1,1,1,1,1,1},
 	.DisplayMode = 0, //uint8_t DisplayMode;  // ???? = 0 ?? =1 ??
 	.interface_type = {TYPE_IEPE,TYPE_IEPE,TYPE_IEPE,TYPE_IEPE,TYPE_NONE,TYPE_IEPE,TYPE_IEPE,TYPE_IEPE,TYPE_IEPE,1,1,1}, //uint8_t interface_type[12]; // 
 	.unit = {UNIT_M_S2,UNIT_TEMP,UNIT_M_S2,UNIT_M_S2,UNIT_M_S2,UNIT_M_S2,1,1,1,1,1,1},//uint8_t unit[12];  // 
